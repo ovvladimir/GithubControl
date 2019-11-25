@@ -1,9 +1,11 @@
 import os
+import shutil
 import requests
 import json
 import webbrowser
 import time
 from tkinter import Tk, Canvas, Entry, LabelFrame, CENTER, Button, END, Text, DISABLED
+import tkinter.scrolledtext as scroll
 
 
 def clean():
@@ -21,8 +23,6 @@ def text_output(text_data):
 def authorization():
     api(log.get(), dom.get(), pas.get(), rep.get())
     root.attributes('-topmost', True)
-    time.sleep(5)
-    root.destroy()
 
 
 def enter(event):
@@ -50,7 +50,7 @@ def api(login, email, password, repository):
     repos_list = []
     # Путь к папке, в которую клонируется репозиторий
     if os.name == 'nt':
-        path = 'C:/Users/BOB/Документы_'
+        path = f'{os.getenv("USERPROFILE")}/Документы_'
     else:
         path = '/home/algoritmika/Документы'
     # api
@@ -69,6 +69,8 @@ def api(login, email, password, repository):
         else:
             text_output('[INFO] Такой репозиторий уже есть на github')
             print('[INFO] Такой репозиторий уже есть на github')
+        text_output('[INFO] Список репозиториев на github:')
+        print('[INFO] Список репозиториев на github:')
         for repo in repos.json():
             text_output(repo['html_url'])
             print(repo['html_url'])
@@ -79,10 +81,16 @@ def api(login, email, password, repository):
         if folder != os.path.split(path)[1]:
             text_output('[ERROR] Вы не в папке "Документы"')
             print('[ERROR] Вы не в папке "Документы"')
-        elif repository in os.listdir(os.getcwd()):
-            text_output('[ERROR] Указанный Вами репозиторий уже существует в папке "Документы"')
-            print('[ERROR] Указанный Вами репозиторий уже существует в папке "Документы"')
         else:
+            if os.path.isdir(repository):
+                shutil.rmtree(repository)
+                text_output(
+                    '[INFO] Указанный Вами репозиторий '
+                    'будет перезаписан в папке "Документы"')
+                print(
+                    '[INFO] Указанный Вами репозиторий '
+                    'будет перезаписан в папке "Документы"')
+
             text_output(f'[INFO] Скачивается {repository}')
             print(f'[INFO] Скачивается {repository}')
             os.system(f'git clone https://github.com/{login}/{repository}.git')
@@ -94,15 +102,14 @@ def api(login, email, password, repository):
             if repository not in repos_list:
                 f = open('main.py', 'a')
                 f.close()
+            # Linux - в Chrome отключить аппаратное ускорение gpu
+            webbrowser.open(f'https://github.com/{login}')
     else:
         text_output('[ERROR] Ошибка входа на github')
         print('[ERROR] Ошибка входа на github')
 
     text_output('[INFO] Выход')
     print(f'[INFO] Выход\n{"-"*70}')
-    time.sleep(3)
-    # Linux - в Chrome отключить аппаратное ускорение gpu
-    webbrowser.open(f'https://github.com/{login}')
 
 
 block_dict = {'log_block': 0, 'dom_block': 0, 'pas_block': 0, 'rep_block': 0}
@@ -116,26 +123,27 @@ canvas.pack()
 
 lf = LabelFrame(canvas, text=' Авторизация ', bd=4, fg='red')
 lf.pack()
-log = Entry(lf, width=34, font='Arial 14', fg='light gray')
-dom = Entry(lf, width=34, font='Arial 14', fg='light gray')
-pas = Entry(lf, width=34, font='Arial 14', fg='light gray')
-rep = Entry(lf, width=34, font='Arial 14', fg='light gray')
+log = Entry(lf, width=38, font='Arial 14', fg='light gray')
+dom = Entry(lf, width=38, font='Arial 14', fg='light gray')
+pas = Entry(lf, width=38, font='Arial 14', fg='light gray')
+rep = Entry(lf, width=38, font='Arial 14', fg='light gray')
 log.insert(0, 'login, например ProV2019')
 dom.insert(0, 'email, например ProV2019@yandex.ru')
-pas.insert(0, 'password (пароль)')
+pas.insert(0, 'password')
 rep.insert(0, 'repository, например GitControl')
 log.pack()
 dom.pack()
 pas.pack()
 rep.pack()
-btn = Button(lf, text='ВХОД', fg='red', command=authorization)
+btn = Button(lf, text='ВХОД', fg='green', command=authorization)
 btn.pack()
 
 lf1 = LabelFrame(canvas, text=' Терминал ', height=250, bd=4, fg='blue')
 lf1.pack_propagate(False)
 lf1.pack(fill='both')
-text = Text(lf1, font='Arial 12', fg='black')
+text = scroll.ScrolledText(lf1, font='Arial 12')
 text.pack()
+Button(canvas, text=' QUIT ', fg='red', command=root.destroy).pack()
 
 root.bind('<1>', enter)
 root.mainloop()

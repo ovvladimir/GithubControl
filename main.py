@@ -3,9 +3,10 @@ import shutil
 import requests
 import json
 import webbrowser
-import time
 from tkinter import Tk, Canvas, Entry, LabelFrame, CENTER, Button, END, Text, DISABLED
 import tkinter.scrolledtext as scroll
+
+download_folder = 'Документы_'
 
 
 def clean():
@@ -50,9 +51,11 @@ def api(login, email, password, repository):
     repos_list = []
     # Путь к папке, в которую клонируется репозиторий
     if os.name == 'nt':
-        path = f'{os.getenv("USERPROFILE")}/Документы_'
+        path = os.path.join(os.getenv("USERPROFILE"), download_folder)
     else:
         path = '/home/algoritmika/Документы'
+    if login == 'login, например ProV2019':
+        login = ''
     # api
     url = 'https://api.github.com/user/repos'
     auth = (login, password)
@@ -143,7 +146,7 @@ lf1.pack_propagate(False)
 lf1.pack(fill='both')
 text = scroll.ScrolledText(lf1, font='Arial 12')
 text.pack()
-Button(canvas, text=' QUIT ', fg='red', command=root.destroy).pack()
+Button(canvas, text='ВЫХОД', fg='red', command=root.destroy).pack()
 
 root.bind('<1>', enter)
 root.mainloop()

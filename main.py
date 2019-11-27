@@ -2,7 +2,7 @@ import os
 import requests
 import json
 import webbrowser
-from tkinter import Tk, Canvas, Entry, LabelFrame, CENTER, Button, END, DISABLED
+from tkinter import Tk, Canvas, Entry, LabelFrame, Button, CENTER, END, DISABLED, NORMAL
 import tkinter.scrolledtext as scroll
 
 download_folder = 'Документы_'
@@ -10,8 +10,7 @@ download_folder = 'Документы_'
 
 def clean():
     btn.configure(state=DISABLED)
-    pas.delete(0, END)
-    pas.insert(0, '************')
+    pas.configure(show='*')
     root.update()
 
 
@@ -52,7 +51,7 @@ def api(login, email, password, repository):
         path = os.path.join(os.getenv("USERPROFILE"), download_folder)
     else:
         path = '/home/algoritmika/Документы'
-    if login == 'login, например ProV2019':
+    if login == log_start:
         login = ''
     # api
     url = 'https://api.github.com/user/repos'
@@ -89,6 +88,7 @@ def api(login, email, password, repository):
             print(
                 '[ERROR] Указанный Вами репозиторий уже существует '
                 'в папке "Документы"')
+            btn.configure(state=NORMAL)
         else:
             text_output(f'[INFO] Скачивается {repository}')
             print(f'[INFO] Скачивается {repository}')
@@ -135,6 +135,7 @@ log.pack()
 dom.pack()
 pas.pack()
 rep.pack()
+log_start = log.get()
 btn = Button(lf, text='ВХОД', fg='green', command=authorization)
 btn.pack()
 

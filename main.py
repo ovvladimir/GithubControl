@@ -3,7 +3,7 @@ import shutil
 import requests
 import json
 import webbrowser
-from tkinter import Tk, Canvas, Entry, LabelFrame, CENTER, Button, END, Text, DISABLED
+from tkinter import Tk, Canvas, Entry, LabelFrame, CENTER, Button, END, DISABLED
 import tkinter.scrolledtext as scroll
 
 download_folder = 'Документы_'
@@ -86,7 +86,7 @@ def api(login, email, password, repository):
             print('[ERROR] Вы не в папке "Документы"')
         else:
             if os.path.isdir(repository):
-                shutil.rmtree(repository)
+                shutil.rmtree(repository, ignore_errors=True)
                 text_output(
                     '[INFO] Указанный Вами репозиторий '
                     'будет перезаписан в папке "Документы"')

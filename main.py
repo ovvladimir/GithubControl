@@ -1,5 +1,4 @@
 import os
-import shutil
 import requests
 import json
 import webbrowser
@@ -84,16 +83,14 @@ def api(login, email, password, repository):
         if folder != os.path.split(path)[1]:
             text_output('[ERROR] Вы не в папке "Документы"')
             print('[ERROR] Вы не в папке "Документы"')
+        elif os.path.isdir(repository):
+            text_output(
+                '[ERROR] Указанный Вами репозиторий уже существует '
+                'в папке "Документы"')
+            print(
+                '[ERROR] Указанный Вами репозиторий уже существует '
+                'в папке "Документы"')
         else:
-            if os.path.isdir(repository):
-                shutil.rmtree(repository, ignore_errors=True)
-                text_output(
-                    '[INFO] Указанный Вами репозиторий '
-                    'будет перезаписан в папке "Документы"')
-                print(
-                    '[INFO] Указанный Вами репозиторий '
-                    'будет перезаписан в папке "Документы"')
-
             text_output(f'[INFO] Скачивается {repository}')
             print(f'[INFO] Скачивается {repository}')
             os.system(f'git clone https://github.com/{login}/{repository}.git')

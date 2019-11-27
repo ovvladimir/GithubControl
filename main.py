@@ -22,7 +22,6 @@ def text_output(text_data):
 
 def authorization():
     api(log.get(), dom.get(), pas.get(), rep.get())
-    root.attributes('-topmost', True)
 
 
 def enter(event):
@@ -117,6 +116,7 @@ block_dict = {'log_block': 0, 'dom_block': 0, 'pas_block': 0, 'rep_block': 0}
 root = Tk()
 root.geometry('+10+10')
 root.title('Ввод параметров для входа на github')
+root.attributes('-topmost', True)
 
 canvas = Canvas(root, bg='white')
 canvas.pack()

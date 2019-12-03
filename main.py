@@ -2,7 +2,7 @@ import os
 import requests
 import json
 import webbrowser
-from tkinter import Tk, Canvas, Entry, LabelFrame, Button, CENTER, END, DISABLED, NORMAL
+from tkinter import Tk, Canvas, Entry, LabelFrame, Button, END, DISABLED, NORMAL
 import tkinter.scrolledtext as scroll
 
 download_folder = 'Документы_'
@@ -43,7 +43,7 @@ def enter(event):
 
 
 def api(login, email, password, repository):
-    print('-'*70)
+    print('-' * 70)
     clean()
     repos_list = []
     # Путь к папке, в которую клонируется репозиторий
@@ -64,7 +64,7 @@ def api(login, email, password, repository):
             data = {
                 "name": f"{repository}",
                 "description": "Python"}
-            new_repository = requests.post(url, auth=auth, data=json.dumps(data))
+            requests.post(url, auth=auth, data=json.dumps(data))  # new repository
             repos = requests.get(url, auth=auth)
         else:
             text_output('[INFO] Такой репозиторий уже есть на github')

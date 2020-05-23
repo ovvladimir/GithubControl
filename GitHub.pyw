@@ -52,7 +52,7 @@ def api(login, email, password, repository):
     path = os.path.join(os.path.expanduser('~'), download_folder)
     # if login == log_start:
     #     login = ''
-    token = '6f1c75adeb788db4905a15f9aeefe2050de49137'
+    token = ''
     if password == '1':
         password = token
     # api
